@@ -30,7 +30,7 @@ passed_model_path = sys.argv[2]
 
 
 def loadData(dataset_name):
-    dirpath="/workspaces/hyper-gcn/datasets/HOOO.mat"
+    dirpath="/hyper-gcn/datasets/HOOO.mat"
     if dataset_name.lower() == "houston2013":
         data_file = f"{dirpath}/Houston13.mat"
         gt_file = f"{dirpath}/Houston13_7gt.mat"
@@ -47,7 +47,7 @@ def loadData(dataset_name):
             y = gt_f['map'][()]
         
     elif dataset_name.lower() == "muufl":
-        data_file = r"/workspaces/hyper-gcn/datasets/MUUFL_data.mat"
+        data_file = r"/hyper-gcn/datasets/MUUFL_data.mat"
         
         data = loadmat(data_file)
         X = data['hsi_img'][()]
