@@ -31,7 +31,7 @@ st.header("Hyperspectral Image Classification with Attention Graph Convolutional
 st.subheader("Team Members: Bhuvanesh Singla (221AI014), Raajan Rajesh Wankhade (221AI031)")
 
 # dropdown for dataset selection
-dataset_name = st.selectbox("Select Dataset", ["MUUFL", "Houston18"])
+dataset_name = st.selectbox("Select Dataset", ["MUUFL", "Houston18", "Trento"])
 processing_type = st.selectbox("Select Processing Type", ["Show pre-computed result", "Run through model (20-30 Minutes)"])
 
 model_path = f"models\{dataset_name}_weights.pt" 
