@@ -34,7 +34,7 @@ st.subheader("Team Members: Bhuvanesh Singla (221AI014), Raajan Rajesh Wankhade 
 dataset_name = st.selectbox("Select Dataset", ["MUUFL", "Houston18"])
 processing_type = st.selectbox("Select Processing Type", ["Show pre-computed result", "Run through model (20-30 Minutes)"])
 
-model_path = f"/workspaces/hyper-gcn/models/{dataset_name}_weights.pt" 
+model_path = f"/hyper-gcn/models/{dataset_name}_weights.pt" 
 
 rgb_image_path = os.path.join(r"rgbs", f"{dataset_name}_rgb.png")
 if os.path.exists(rgb_image_path):
@@ -44,7 +44,7 @@ else:
 
 
 if st.button("Run/Show Results"):
-    save_path = rf"/workspaces/hyper-gcn/results/{dataset_name}_result.png"
+    save_path = rf"/hyper-gcn/results/{dataset_name}_result.png"
     if processing_type == "Show pre-computed result":
         if os.path.exists(save_path):
             st.image(save_path, caption=f"Result for {dataset_name}")
@@ -54,7 +54,7 @@ if st.button("Run/Show Results"):
         st.write("Running model... This may take some time.")
         subprocess.run(["python", "infer_script.py", dataset_name, model_path])
         
-        output_image_path = os.path.join("live_results", f"{dataset_name}_live_results.png")
+        output_image_path = os.path.join("/hyper-gcn/live_results", f"{dataset_name}_live_results.png")
     
         if os.path.exists(output_image_path):
             st.image(output_image_path, caption="Predicted Classification Map", use_column_width=True)
