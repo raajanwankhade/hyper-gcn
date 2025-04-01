@@ -25,8 +25,8 @@ random.seed(random_seed)
 torch.manual_seed(random_seed)
 torch.cuda.manual_seed_all(random_seed)
 
-passed_dataset_name = sys.argv[1]
-passed_model_path = sys.argv[2]
+# passed_dataset_name = sys.argv[1]
+# passed_model_path = sys.argv[2]
 
 
 def loadData(dataset_name):
@@ -50,7 +50,7 @@ def loadData(dataset_name):
     
     return X, y
 
-X, y = loadData(passed_dataset_name)
+# X, y = loadData(passed_dataset_name)
 
 class PatchSet(Dataset):
     """Generate 3D patches from a hyperspectral dataset."""
@@ -130,15 +130,15 @@ class PatchSet(Dataset):
 PATCH_SIZE = 8
 BATCH_SIZE = 64
 
-all_data = PatchSet(X, y, PATCH_SIZE,is_pred = True)
-all_loader = DataLoader(all_data,BATCH_SIZE,shuffle= False)
+# all_data = PatchSet(X, y, PATCH_SIZE,is_pred = True)
+# all_loader = DataLoader(all_data,BATCH_SIZE,shuffle= False)
 
 BAND = 64
 
-if passed_dataset_name == "MUUFL":
-    CLASSES_NUM = 11
-else:
-    CLASSES_NUM = 6 # Trento
+# if passed_dataset_name == "MUUFL":
+#     CLASSES_NUM = 11
+# else:
+#     CLASSES_NUM = 6 # Trento
 
 # print('-----Importing Setting Parameters-----')
 PATCH_LENGTH = 5
@@ -423,62 +423,62 @@ class AttentionGCN(nn.Module):
     def forward(self, x, verbose = False):
         
         batch_size = x.shape[0]
-        if verbose:
-            print("Input shape:", x.shape)  # (batch_size, 17, 11, 11)
+        # if verbose:
+        #     print("Input shape:", x.shape)  # (batch_size, 17, 11, 11)
         
         x = F.relu(self.conv1(x))
-        if verbose:
-            print("After conv1:", x.shape)  # (batch_size, 11, 11, 11)
+        # if verbose:
+        #     print("After conv1:", x.shape)  # (batch_size, 11, 11, 11)
             # plot_batch_hist(x, "Before BN1")
 
         x = self.bn1(x)
-        if verbose:
-            print("After bn1:", x.shape)  # (batch_size, 8, 11, 11)
+        # if verbose:
+        #     print("After bn1:", x.shape)  # (batch_size, 8, 11, 11)
             # plot_batch_hist(x, "After BN1")
         
         attention_out = self.attention(x)
-        if verbose:
-            print("After attention:", attention_out.shape)  # (batch_size, 11, 11, 11)
+        # if verbose:
+        #     print("After attention:", attention_out.shape)  # (batch_size, 11, 11, 11)
         
         # Graph reasoning module 1
         graph_t = x.view(batch_size,8, 8*8).permute(0,2,1)
-        if verbose:
-            print("Graph input shape:", graph_t.shape)  # (batch_size, 121, 11)
+        # if verbose:
+        #     print("Graph input shape:", graph_t.shape)  # (batch_size, 121, 11)
         
         squeezed_graph_t = F.relu(self.squeezer(graph_t))
-        if verbose:
-            print("After squeezer:", squeezed_graph_t.shape)  # (batch_size, 16, 11)
+        # if verbose:
+        #     print("After squeezer:", squeezed_graph_t.shape)  # (batch_size, 16, 11)
         
         gconv = F.relu(self.gconv(squeezed_graph_t))
-        if verbose:
-            print("After gconv:", gconv.shape)  # (batch_size, 121, 11)
+        # if verbose:
+        #     print("After gconv:", gconv.shape)  # (batch_size, 121, 11)
         
         unsqueezed_graph = F.relu(self.unsqueezer(gconv))
-        if verbose:
-            print("After unsqueezer:", unsqueezed_graph.shape)  # (batch_size, 121, 11)
+        # if verbose:
+        #     print("After unsqueezer:", unsqueezed_graph.shape)  # (batch_size, 121, 11)
         
         glore = unsqueezed_graph.view(batch_size, 8, 8, 8)
-        if verbose:
-            print("After glore reshape:", glore.shape)  # (batch_size, 11, 11, 11)
+        # if verbose:
+        #     print("After glore reshape:", glore.shape)  # (batch_size, 11, 11, 11)
         
         block1 = torch.cat([x, glore], dim=1)
-        if verbose:
-            print("After block1 concat:", block1.shape)  # (batch_size, 22, 11, 11)
+        # if verbose:
+        #     print("After block1 concat:", block1.shape)  # (batch_size, 22, 11, 11)
 
         # Graph module 1 ends
         
         block12 = torch.cat([x, block1, attention_out], dim=1)
-        if verbose:
-            print("After block12 concat:", block12.shape)  # (batch_size, 44, 11, 11)
+        # if verbose:
+        #     print("After block12 concat:", block12.shape)  # (batch_size, 44, 11, 11)
         
         x = F.relu(self.conv2(block12))
-        if verbose:
-            print("After conv2:", x.shape)  # (batch_size, 44, 11, 11)
+        # if verbose:
+        #     print("After conv2:", x.shape)  # (batch_size, 44, 11, 11)
             # plot_batch_hist(x,"Before BN2")
 
         x = self.bn2(x)
-        if verbose:
-            print("After bn2:", x.shape)
+        # if verbose:
+        #     print("After bn2:", x.shape)
             # plot_batch_hist(x, "After BN2")
 
         # Graph Module 2 Start
@@ -489,8 +489,8 @@ class AttentionGCN(nn.Module):
         unsqueezed_graph_t2 = F.relu(self.unsqueezer2(gconv2)) #(b,121,121)
         glore2 = unsqueezed_graph_t2.view(batch_size,64,8,8)
 
-        if verbose:
-            print("After glore2:", glore2.shape)
+        # if verbose:
+        #     print("After glore2:", glore2.shape)
         
         # Graph Module 2 end
 
@@ -498,70 +498,70 @@ class AttentionGCN(nn.Module):
 
         block21 = torch.cat([x, block2, attention_out], dim=1) ## b, 220, 11,11
 
-        if verbose:
-            print("After block21 concat:", block21.shape)
+        # if verbose:
+        #     print("After block21 concat:", block21.shape)
 
         x = F.relu(self.conv3(block21))
-        if verbose:
-            print("After conv3:", x.shape)
+        # if verbose:
+        #     print("After conv3:", x.shape)
             # plot_batch_hist(x, "Before BN3")
 
         x = self.bn3(x)
-        if verbose:
-            print("After bn3:", x.shape)
-            plot_batch_hist(x, "After BN3")
+        # if verbose:
+        #     print("After bn3:", x.shape)
+        #     plot_batch_hist(x, "After BN3")
 
         x = F.relu(self.conv4(x))
-        if verbose:
-            print("After conv4:", x.shape)  # (batch_size, 64, 11, 11)
-            plot_batch_hist(x, "Before BN4")
+        # if verbose:
+        #     print("After conv4:", x.shape)  # (batch_size, 64, 11, 11)
+        #     plot_batch_hist(x, "Before BN4")
 
         x = self.bn4(x)
-        if verbose:
-            print("After bn4:", x.shape)
-            plot_batch_hist(x, "After BN4")
+        # if verbose:
+        #     print("After bn4:", x.shape)
+        #     plot_batch_hist(x, "After BN4")
 
         x = F.relu(self.conv5(x))
-        if verbose:
-            print("After conv5:", x.shape)  # (batch_size, 128, 11, 11)
-            plot_batch_hist(x, "Before BN5")
+        # if verbose:
+        #     print("After conv5:", x.shape)  # (batch_size, 128, 11, 11)
+        #     plot_batch_hist(x, "Before BN5")
 
         x = self.bn5(x)
-        if verbose:
-            print("After bn5:", x.shape)
-            plot_batch_hist(x, "After BN5")
+        # if verbose:
+        #     print("After bn5:", x.shape)
+        #     plot_batch_hist(x, "After BN5")
 
         
         x = x.view(batch_size, -1)
-        if verbose:
-            print("After flattening:", x.shape)  # (batch_size, 128 * 11 * 11)
+        # if verbose:
+        #     print("After flattening:", x.shape)  # (batch_size, 128 * 11 * 11)
         
         x = F.relu(self.fc1(x))
-        if verbose:
-            print("After fc1:", x.shape)  # (batch_size, 100)
+        # if verbose:
+        #     print("After fc1:", x.shape)  # (batch_size, 100)
         
         x = F.relu(self.fc2(x))
-        if verbose:
-            print("After fc2:", x.shape)  # (batch_size, 20)
+        # if verbose:
+        #     print("After fc2:", x.shape)  # (batch_size, 20)
         
         x = F.softmax(self.fc3(x), dim=1)
-        if verbose:
-            print("After fc3 (softmax):", x.shape)
+        # if verbose:
+        #     print("After fc3 (softmax):", x.shape)
             # print(x)# (batch_size, 7)
         
         return x
 
-pre_height = 8
-pre_width = 8
-in_dim = 8
-proj_dim = 8
-head_dim = 4
-n_classes = CLASSES_NUM
-attention_dropout = 0.1
-ff_dropout = 0.1
+# pre_height = 8
+# pre_width = 8
+# in_dim = 8
+# proj_dim = 8
+# head_dim = 4
+# n_classes = CLASSES_NUM
+# attention_dropout = 0.1
+# ff_dropout = 0.1
 
 
-model = AttentionGCN(pre_height, pre_width, in_dim, proj_dim, head_dim, n_classes, attention_dropout, ff_dropout)
+# model = AttentionGCN(pre_height, pre_width, in_dim, proj_dim, head_dim, n_classes, attention_dropout, ff_dropout)
 
 def apply_pca(hsi, out_components=17):
     b, c, h, w = hsi.shape  # Batch, Channels, Height, Width
@@ -579,11 +579,11 @@ def apply_pca(hsi, out_components=17):
 
     return output_hsi
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+# device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # model = model.to(device)
 
-model = torch.load(passed_model_path, map_location = device)
+# model = torch.load(passed_model_path, map_location = device)
 
 
 def list_to_colormap(x_list):
@@ -610,11 +610,12 @@ def list_to_colormap(x_list):
 
     return colormap
 
-def predict_and_save_grid(dataset, model, save_path):
+def predict_and_save_grid(passed_dataset_name, dataset, model, save_path):
     """
     Process each patch sequentially, predict its label, and map it back to the (H, W) grid.
 
     Args:
+        passed_dataset_name (str): Name of the dataset (MUUFL or Trento).    
         dataset (PatchSet): The dataset containing hyperspectral patches.
         model (torch.nn.Module): The trained model.
         save_path (str): Path to save the prediction map.
@@ -643,5 +644,5 @@ def predict_and_save_grid(dataset, model, save_path):
     colormap = list_to_colormap(pred_grid)
     plt.imsave(save_path, colormap)
 
-output_path = os.path.join("live_results", f"{passed_dataset_name}_live_results.png")
-predict_and_save_grid(all_data, model, "prediction_map.png")
+# output_path = os.path.join("live_results", f"{passed_dataset_name}_live_results.png")
+# predict_and_save_grid(all_data, model, "prediction_map.png")

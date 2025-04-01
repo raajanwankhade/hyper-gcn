@@ -1,9 +1,10 @@
 import streamlit as st
 import os
 import base64
-from PIL import Image
-import subprocess
-import pandas as pd
+# from PIL import Image
+import torch
+# import subprocess
+import infer_script 
 
 def set_background(image_path):
     """Set a background image for the Streamlit app."""
@@ -54,8 +55,32 @@ if st.button("Run/Show Results"):
             st.error("Result not found!")
     else:
         st.write("Running model... This may take some time.")
-        subprocess.run(["python", "infer_script.py", dataset_name, model_path])
+        # subprocess.run(["python", "infer_script.py", dataset_name, model_path])
+        X, y = infer_script.loadData(dataset_name)
         
+        if dataset_name == "MUUFL":
+            CLASSES_NUM = 11
+        else:
+            CLASSES_NUM = 6 # Trento
+        
+        pre_height = 8
+        pre_width = 8
+        in_dim = 8
+        proj_dim = 8
+        head_dim = 4
+        n_classes = CLASSES_NUM
+        attention_dropout = 0.1
+        ff_dropout = 0.1
+            
+        model = infer_script.AttentionGCN(pre_height, pre_width, in_dim, proj_dim, head_dim, n_classes, attention_dropout, ff_dropout)
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        
+        all_data = infer_script.PatchSet(X, y, infer_script.PATCH_SIZE,is_pred = True)
+        all_loader = infer_script.DataLoader(all_data,infer_script.BATCH_SIZE,shuffle= False)
+        
+        model = torch.load(model_path, map_location = device)
+        
+        infer_script.predict_and_save_grid(all_data, model, "prediction_map.png")
         output_image_path = os.path.join("live_results", f"{dataset_name}_live_results.png")
     
         if os.path.exists(output_image_path):
