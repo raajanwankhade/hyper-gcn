@@ -134,7 +134,9 @@ all_data = PatchSet(X, y, PATCH_SIZE,is_pred = True)
 all_loader = DataLoader(all_data,BATCH_SIZE,shuffle= False)
 
 BAND = 64
-CLASSES_NUM = 11
+#####
+CLASSES_NUM = 11  ##CLASSES_NUM = 11 or 6
+#####
 
 # print('-----Importing Setting Parameters-----')
 PATCH_LENGTH = 5
@@ -552,7 +554,7 @@ pre_width = 8
 in_dim = 8
 proj_dim = 8
 head_dim = 4
-n_classes = 11
+n_classes = CLASSES_NUM
 attention_dropout = 0.1
 ff_dropout = 0.1
 
@@ -587,6 +589,17 @@ def list_to_colormap(x_list):
     colormap = np.zeros((x_list.shape[0], x_list.shape[1], 3))  # Create RGB array
     
     # class colors (example: 10 classes)
+    ###########################################
+    
+    #colors = {
+    #    0: [255, 0, 0],   # Red
+     #   1: [0, 255, 0],   # Green
+    #    2: [0, 0, 255],   # Blue
+    #    3: [255, 255, 0], # Yellow
+    #    4: [255, 165, 0], # Orange
+    #    5: [128, 0, 128], # Purple
+    #    }
+
     colors = {
         0: [255, 0, 0],   # Red
         1: [0, 255, 0],   # Green
@@ -599,7 +612,7 @@ def list_to_colormap(x_list):
         8: [128, 128, 0], # Olive
         9: [0, 128, 128], # Teal
     }
-
+    ###########################################
     # Convert labels to colors
     for (i, j), label in np.ndenumerate(x_list):  
         colormap[i, j] = np.array(colors.get(label, [0, 0, 0])) / 255.  # Default black for unknown labels
@@ -631,6 +644,7 @@ def predict_and_save_grid(dataset, model, save_path):
 
     # Reshape predictions into a 2D grid (325, 220)
     pred_grid = preds.reshape((325, 220))
+    # pred_grid = preds.reshape((166, 600))
 
     # Convert to colormap and save
     colormap = list_to_colormap(pred_grid)
