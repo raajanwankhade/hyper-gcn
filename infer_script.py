@@ -594,7 +594,7 @@ def list_to_colormap(x_list):
     """Convert a label array to an RGB colormap."""
     colormap = np.zeros((x_list.shape[0], x_list.shape[1], 3))  # Create RGB array
     
-    # Define class colors (example: 10 classes, change as needed)
+    # class colors (example: 10 classes)
     colors = {
         0: [255, 0, 0],   # Red
         1: [0, 255, 0],   # Green
