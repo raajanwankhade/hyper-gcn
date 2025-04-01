@@ -7,7 +7,7 @@ import torch
 import infer_script 
 from infer_script import AttentionGCN, CoAtNetRelativeAttention
 import pickle
-
+st.set_option('server.runOnSave', False)
 def set_background(image_path):
     """Set a background image for the Streamlit app."""
     page_bg_img = f"""
@@ -85,7 +85,8 @@ if st.button("Run/Show Results"):
         
         model = torch.load(model_path,pickle_module=pickle, map_location = device, weights_only=False)
         
-        infer_script.predict_and_save_grid(dataset_name,all_data, model, "prediction_map.png")
+        infer_script.predict_and_save_grid(dataset_name, all_data, model, "prediction_map.png")
+        st.write("Model has finished running.")
         output_image_path = os.path.join("live_results", f"{dataset_name}_live_results.png")
     
         if os.path.exists(output_image_path):
