@@ -1,13 +1,7 @@
 import streamlit as st
 import os
 import base64
-# from PIL import Image
-# import torch
-# import subprocess
-# import infer_script 
-# from infer_script import AttentionGCN, CoAtNetRelativeAttention
-# import pickle
-st.set_option('server.runOnSave', False)
+
 def set_background(image_path):
     """Set a background image for the Streamlit app."""
     page_bg_img = f"""
