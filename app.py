@@ -21,30 +21,6 @@ def get_image_as_base64(image_path):
     with open(image_path, "rb") as img_file:
         return base64.b64encode(img_file.read()).decode()
 
-dataset_colormaps = {
-    "Trento": {
-        "Apples": (255, 0, 0),
-        "Buildings": (0, 255, 0),
-        "Ground": (0, 0, 255),
-        "Woods": (255, 255, 0),
-        "Vineyard": (0, 255, 255),
-        "Roads": (255, 0, 255)
-    },
-    "MUUFL": {
-        "Trees": (255, 0, 0),
-        "Grass_Pure": (0, 255, 0),
-        "Grass_Groundsurface": (0, 0, 255),
-        "Dirt_And_Sand": (255, 255, 0),
-        "Road_Materials": (0, 255, 255),
-        "Water": (255, 0, 255),
-        "Buildings'_Shadow": (192, 192, 192),
-        "Buildings": (128, 128, 128),
-        "Sidewalk": (128, 0, 0),
-        "Yellow_Curb": (128, 128, 0),
-        "ClothPanels": (0, 128, 0)
-    }
-}
-
 
 background_image_path = r"bigmap.jpg"
 set_background(get_image_as_base64(background_image_path))

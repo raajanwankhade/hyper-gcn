@@ -134,7 +134,11 @@ all_data = PatchSet(X, y, PATCH_SIZE,is_pred = True)
 all_loader = DataLoader(all_data,BATCH_SIZE,shuffle= False)
 
 BAND = 64
-CLASSES_NUM = 11
+
+if passed_dataset_name == "MUUFL":
+    CLASSES_NUM = 11
+else:
+    CLASSES_NUM = 6 # Trento
 
 # print('-----Importing Setting Parameters-----')
 PATCH_LENGTH = 5
@@ -552,7 +556,7 @@ pre_width = 8
 in_dim = 8
 proj_dim = 8
 head_dim = 4
-n_classes = 11
+n_classes = CLASSES_NUM
 attention_dropout = 0.1
 ff_dropout = 0.1
 
@@ -608,7 +612,7 @@ def list_to_colormap(x_list):
 
 def predict_and_save_grid(dataset, model, save_path):
     """
-    Process each patch sequentially, predict its label, and map it back to the (325, 220) grid.
+    Process each patch sequentially, predict its label, and map it back to the (H, W) grid.
 
     Args:
         dataset (PatchSet): The dataset containing hyperspectral patches.
@@ -629,8 +633,11 @@ def predict_and_save_grid(dataset, model, save_path):
             pred = output.argmax(dim=1).cpu().item()  # Get class prediction
             preds[i] = pred  # Store prediction
 
-    # Reshape predictions into a 2D grid (325, 220)
-    pred_grid = preds.reshape((325, 220))
+    # Reshape predictions into a 2D grid (H, W)
+    if passed_dataset_name == "MUUFL":
+        pred_grid = preds.reshape((325, 220))
+    else:
+        pred_grid = preds.reshape((166, 600))
 
     # Convert to colormap and save
     colormap = list_to_colormap(pred_grid)
