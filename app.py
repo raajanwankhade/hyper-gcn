@@ -85,7 +85,7 @@ if st.button("Run/Show Results"):
         
         model = torch.load(model_path,pickle_module=pickle, map_location = device, weights_only=False)
         
-        infer_script.predict_and_save_grid(all_data, model, "prediction_map.png")
+        infer_script.predict_and_save_grid(dataset_name,all_data, model, "prediction_map.png")
         output_image_path = os.path.join("live_results", f"{dataset_name}_live_results.png")
     
         if os.path.exists(output_image_path):
