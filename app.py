@@ -66,6 +66,29 @@ dataset_colormaps = {
 background_image_path = r"bigmap.jpg"
 set_background(get_image_as_base64(background_image_path))
 
+header_html = """
+    <style>
+    .header {
+        background-color: white;
+        padding: 10px 0;
+        text-align: center;
+        position: relative;
+        width: 100%;
+    }
+    .header img {
+        height: 80px;
+        object-fit: contain;
+    }
+    </style>
+    <div class="header">
+        <img src="data:image/png;base64,{}" alt="Institute Logo">
+    </div>
+""".format(get_image_as_base64("hhahaimage.png"))  # Path to your logo image
+
+st.markdown(header_html, unsafe_allow_html=True)
+
+
+
 st.title("National Institute of Technology Karnataka, Surathkal")
 st.subheader("Department of Information Technology")
 st.subheader("IT353: Deep Learning, B. Tech. in Artificial Intelligence")
