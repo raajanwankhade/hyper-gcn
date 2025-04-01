@@ -47,7 +47,7 @@ if st.button("Run/Show Results"):
     save_path = rf"results/{dataset_name}_result.png"
     if processing_type == "Show pre-computed result":
         if os.path.exists(save_path):
-            st.image(save_path, caption=f"Result for {dataset_name}")
+            st.image(save_path, caption=f"Result for {dataset_name}", use_container_width =True)
         else:
             st.error("Result not found!")
     else:
@@ -57,6 +57,6 @@ if st.button("Run/Show Results"):
         output_image_path = os.path.join("live_results", f"{dataset_name}_live_results.png")
     
         if os.path.exists(output_image_path):
-            st.image(output_image_path, caption="Predicted Classification Map", use_column_width=True)
+            st.image(output_image_path, caption="Predicted Classification Map", use_container_width =True)
         else:
             st.write("Result image not found. Try running the model first.")
