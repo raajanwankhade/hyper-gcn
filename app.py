@@ -63,7 +63,7 @@ dataset_colormaps = {
 }
 
 
-background_image_path = r"airbus_Sentinel-2.jpg"
+background_image_path = r"bigmap.jpg"
 set_background(get_image_as_base64(background_image_path))
 
 st.title("National Institute of Technology Karnataka, Surathkal")
