@@ -5,6 +5,8 @@ import base64
 import torch
 # import subprocess
 import infer_script 
+from infer_script import AttentionGCN
+import pickle
 
 def set_background(image_path):
     """Set a background image for the Streamlit app."""
@@ -72,14 +74,14 @@ if st.button("Run/Show Results"):
         attention_dropout = 0.1
         ff_dropout = 0.1    
         
-        torch.serialization.add_safe_globals([infer_script.AttentionGCN])
-        model = infer_script.AttentionGCN(pre_height, pre_width, in_dim, proj_dim, head_dim, n_classes, attention_dropout, ff_dropout)
+        torch.serialization.add_safe_globals([AttentionGCN])
+        model = AttentionGCN(pre_height, pre_width, in_dim, proj_dim, head_dim, n_classes, attention_dropout, ff_dropout)
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         
         all_data = infer_script.PatchSet(X, y, infer_script.PATCH_SIZE,is_pred = True)
         all_loader = infer_script.DataLoader(all_data,infer_script.BATCH_SIZE,shuffle= False)
         
-        model = torch.load(model_path, map_location = device, weights_only=False)
+        model = torch.load(model_path,pickle_module=pickle, map_location = device, weights_only=False)
         
         infer_script.predict_and_save_grid(all_data, model, "prediction_map.png")
         output_image_path = os.path.join("live_results", f"{dataset_name}_live_results.png")
