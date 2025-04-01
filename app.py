@@ -3,6 +3,7 @@ import os
 import base64
 from PIL import Image
 import subprocess
+import pandas as pd
 
 def set_background(image_path):
     """Set a background image for the Streamlit app."""
@@ -19,6 +20,48 @@ def set_background(image_path):
 def get_image_as_base64(image_path):
     with open(image_path, "rb") as img_file:
         return base64.b64encode(img_file.read()).decode()
+
+dataset_colormaps = {
+    "Trento": {
+        "Apples": (255, 0, 0),
+        "Buildings": (0, 255, 0),
+        "Ground": (0, 0, 255),
+        "Woods": (255, 255, 0),
+        "Vineyard": (0, 255, 255),
+        "Roads": (255, 0, 255)
+    },
+    "MUUFL": {
+        "Trees": (255, 0, 0),
+        "Grass_Pure": (0, 255, 0),
+        "Grass_Groundsurface": (0, 0, 255),
+        "Dirt_And_Sand": (255, 255, 0),
+        "Road_Materials": (0, 255, 255),
+        "Water": (255, 0, 255),
+        "Buildings'_Shadow": (192, 192, 192),
+        "Buildings": (128, 128, 128),
+        "Sidewalk": (128, 0, 0),
+        "Yellow_Curb": (128, 128, 0),
+        "ClothPanels": (0, 128, 0)
+    },
+    "Houston18": {
+        "Healthy grass": (255, 0, 0),
+        "Stressed grass": (0, 255, 0),
+        "Synthetic grass": (0, 0, 255),
+        "Trees": (255, 255, 0),
+        "Soil": (0, 255, 255),
+        "Water": (255, 0, 255),
+        "Residential": (192, 192, 192),
+        "Commercial": (128, 128, 128),
+        "Road": (128, 0, 0),
+        "Highway": (128, 128, 0),
+        "Railway": (0, 128, 0),
+        "Parking Lot 1": (128, 0, 128),
+        "Parking Lot 2": (0, 128, 128),
+        "Tennis Court": (0, 0, 128),
+        "Running Track": (255, 165, 0)
+    }
+}
+
 
 background_image_path = r"airbus_Sentinel-2.jpg"
 set_background(get_image_as_base64(background_image_path))
@@ -61,86 +104,11 @@ if st.button("Run/Show Results"):
         else:
             st.write("Result image not found. Try running the model first.")
 
-# --- CLASS LABELS & COLOUR MAPS ---
-dataset_colormaps = {
-    "Trento": {
-        "Apples": (255, 0, 0),  # Red (0)
-        "Buildings": (0, 255, 0),  # Green (1)
-        "Ground": (0, 0, 255),  # Blue (2)
-        "Woods": (255, 255, 0),  # Yellow (3)
-        "Vineyard": (0, 255, 255),  # Cyan (4)
-        "Roads": (255, 0, 255)  # Magenta (5)
-    },
-    "MUUFL": {
-        "Trees": (255, 0, 0),  # Red (0)
-        "Grass_Pure": (0, 255, 0),  # Green (1)
-        "Grass_Groundsurface": (0, 0, 255),  # Blue (2)
-        "Dirt_And_Sand": (255, 255, 0),  # Yellow (3)
-        "Road_Materials": (0, 255, 255),  # Cyan (4)
-        "Water": (255, 0, 255),  # Magenta (5)
-        "Buildings'_Shadow": (192, 192, 192),  # Silver (6)
-        "Buildings": (128, 128, 128),  # Gray (7)
-        "Sidewalk": (128, 0, 0),  # Maroon (8)
-        "Yellow_Curb": (128, 128, 0),  # Olive (9)
-        "ClothPanels": (0, 128, 0)  # Dark Green (10)
-    },
-    "Houston18": {
-        "Healthy grass": (255, 0, 0),  # Red (0)
-        "Stressed grass": (0, 255, 0),  # Green (1)
-        "Synthetic grass": (0, 0, 255),  # Blue (2)
-        "Trees": (255, 255, 0),  # Yellow (3)
-        "Soil": (0, 255, 255),  # Cyan (4)
-        "Water": (255, 0, 255),  # Magenta (5)
-        "Residential": (192, 192, 192),  # Silver (6)
-        "Commercial": (128, 128, 128),  # Gray (7)
-        "Road": (128, 0, 0),  # Maroon (8)
-        "Highway": (128, 128, 0),  # Olive (9)
-        "Railway": (0, 128, 0),  # Dark Green (10)
-        "Parking Lot 1": (128, 0, 128),  # Purple (11)
-        "Parking Lot 2": (0, 128, 128),  # Teal (12)
-        "Tennis Court": (0, 0, 128),  # Navy (13)
-        "Running Track": (255, 165, 0)  # Orange (14)
-    }
-}
 
-
-def generate_legend_html(dataset_name, dataset_colormap):
-    legend_html = """
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            border: 1px solid black;
-            padding: 5px;
-            text-align: left;
-        }
-        .color-box {
-            width: 20px;
-            height: 20px;
-            display: inline-block;
-            border: 1px solid black;
-        }
-    </style>
-    <h3>Legend - {} Dataset</h3>
-    <table>
-        <tr>
-            <th>Class</th>
-            <th>Colour</th>
-        </tr>
-    """.format(dataset_name)
-    
-    for class_name, rgb in dataset_colormap.items():
-        color_style = "background-color: rgb({}, {}, {});".format(*rgb)
-        legend_html += """
-        <tr>
-            <td>{}</td>
-            <td><span class='color-box' style='{}'></span></td>
-        </tr>
-        """.format(class_name, color_style)
-
-    legend_html += "</table>"
-    return legend_html
-
-st.sidebar.markdown(generate_legend_html(dataset_name, dataset_colormaps[dataset_name]), unsafe_allow_html=True)
+if dataset_name in dataset_colormaps:
+    st.subheader("Class Colour Mapping")
+    colormap_data = pd.DataFrame(
+        [(class_name, *rgb) for class_name, rgb in dataset_colormaps[dataset_name].items()],
+        columns=["Class Name", "R", "G", "B"]
+    )
+    st.dataframe(colormap_data, hide_index=True)
