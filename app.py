@@ -5,7 +5,7 @@ import base64
 import torch
 # import subprocess
 import infer_script 
-from infer_script import AttentionGCN
+from infer_script import AttentionGCN, CoAtNetRelativeAttention
 import pickle
 
 def set_background(image_path):
@@ -75,6 +75,8 @@ if st.button("Run/Show Results"):
         ff_dropout = 0.1    
         
         torch.serialization.add_safe_globals([AttentionGCN])
+        torch.serialization.add_safe_globals([CoAtNetRelativeAttention])
+        
         model = AttentionGCN(pre_height, pre_width, in_dim, proj_dim, head_dim, n_classes, attention_dropout, ff_dropout)
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         
