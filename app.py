@@ -42,51 +42,12 @@ dataset_colormaps = {
         "Sidewalk": (128, 0, 0),
         "Yellow_Curb": (128, 128, 0),
         "ClothPanels": (0, 128, 0)
-    },
-    "Houston18": {
-        "Healthy grass": (255, 0, 0),
-        "Stressed grass": (0, 255, 0),
-        "Synthetic grass": (0, 0, 255),
-        "Trees": (255, 255, 0),
-        "Soil": (0, 255, 255),
-        "Water": (255, 0, 255),
-        "Residential": (192, 192, 192),
-        "Commercial": (128, 128, 128),
-        "Road": (128, 0, 0),
-        "Highway": (128, 128, 0),
-        "Railway": (0, 128, 0),
-        "Parking Lot 1": (128, 0, 128),
-        "Parking Lot 2": (0, 128, 128),
-        "Tennis Court": (0, 0, 128),
-        "Running Track": (255, 165, 0)
     }
 }
 
 
 background_image_path = r"bigmap.jpg"
 set_background(get_image_as_base64(background_image_path))
-
-header_html = """
-    <style>
-    .header {
-        background-color: white;
-        padding: 10px 0;
-        text-align: center;
-        position: relative;
-        width: 100%;
-    }
-    .header img {
-        height: 80px;
-        object-fit: contain;
-    }
-    </style>
-    <div class="header">
-        <img src="data:image/png;base64,{}" alt="Institute Logo">
-    </div>
-""".format(get_image_as_base64("hhahaimage.png"))  # Path to your logo image
-
-st.markdown(header_html, unsafe_allow_html=True)
-
 
 
 st.title("National Institute of Technology Karnataka, Surathkal")
@@ -97,7 +58,7 @@ st.header("Hyperspectral Image Classification with Attention Graph Convolutional
 st.subheader("Team Members: Bhuvanesh Singla (221AI014), Raajan Rajesh Wankhade (221AI031)")
 
 # dropdown for dataset selection
-dataset_name = st.selectbox("Select Dataset", ["MUUFL", "Houston18", "Trento" ])
+dataset_name = st.selectbox("Select Dataset", ["MUUFL", "Trento" ])
 processing_type = st.selectbox("Select Processing Type", ["Show pre-computed result", "Run through model (20-30 Minutes)"])
 
 model_path = f"models/{dataset_name}_weights.pt" 

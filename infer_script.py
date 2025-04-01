@@ -8,16 +8,15 @@ import torch
 import torch.nn as nn
 from torch.utils.data import Dataset, DataLoader
 import torch.backends.cudnn as cudnn
-cudnn.deterministic = True
-cudnn.benchmark = False
-from einops import rearrange, repeat
-import torch.nn.functional as F
-from torch import einsum
-import torch.backends.cudnn as cudnn
+
 cudnn.deterministic = True
 cudnn.benchmark = False
 cudnn.enabled = False
-import h5py
+
+from einops import rearrange, repeat
+import torch.nn.functional as F
+from torch import einsum
+
 from sklearn.decomposition import PCA
 
 random_seed = 42
@@ -30,21 +29,13 @@ passed_model_path = sys.argv[2]
 
 
 def loadData(dataset_name):
-    dirpath="datasets/HOOO.mat"
-    if dataset_name.lower() == "houston2013":
-        data_file = f"{dirpath}/Houston13.mat"
-        gt_file = f"{dirpath}/Houston13_7gt.mat"
-    elif dataset_name.lower() == "houston2018":
-        data_file = f"{dirpath}/Houston18.mat"
-        gt_file = f"{dirpath}/Houston18_7gt.mat"
+    if dataset_name.lower() == "trento":
+        data_file = r"datasets/Italy_hsi.mat"
+        data = loadmat(data_file)
+        labels = loadmat(r"datasets/allgrd.mat")["mask_test"]
         
-        # load data
-        with h5py.File(data_file, 'r') as data_f:
-            X = data_f['ori_data'][()]
-        
-        # loading ground truth
-        with h5py.File(gt_file, 'r') as gt_f:
-            y = gt_f['map'][()]
+        X = data['data'][()]
+        y =labels[()]
         
     elif dataset_name.lower() == "muufl":
         data_file = r"datasets/MUUFL_data.mat"
@@ -54,7 +45,7 @@ def loadData(dataset_name):
         y = data['labels'][()]
         y[y == -1] = 0  # convert -1 labels to 0
     else:
-        raise ValueError("Invalid dataset_name specified. Use 'Houston2013', 'Houston2018', or 'MUUFL'.")
+        raise ValueError("Invalid dataset_name specified. Use 'MUUFL' or 'Trento'.")
     
     return X, y
 
