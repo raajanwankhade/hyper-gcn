@@ -1,9 +1,7 @@
-einops @ file:///home/conda/feedstock_root/build_artifacts/einops_1739083394647/work
 matplotlib==3.10.0
-matplotlib-inline @ file:///home/conda/feedstock_root/build_artifacts/matplotlib-inline_1733416936468/work
 numpy==1.23.5
 oauthlib==3.2.2
 opencv-contrib-python==4.10.0.84
 opencv-python==4.10.0.84
 opt_einsum==3.4.0
-torch @ file:///C:/bld/libtorch_1742909039791/work
+torch==2.6.0
