@@ -85,6 +85,17 @@ if os.path.exists(rgb_image_path):
 else:
     st.warning(f"RGB image for {dataset_name} not found.")
 
+def display_colormap(dataset_name):
+    colormap = dataset_colormaps[dataset_name]
+    table = "<table style='width: 100%; border-collapse: collapse;'>"
+    table += "<tr><th>Class</th><th>Colour</th></tr>"
+    
+    for class_name, rgb in colormap.items():
+        hex_color = f"#{rgb[0]:02x}{rgb[1]:02x}{rgb[2]:02x}"
+        table += f"<tr><td>{class_name}</td><td style='background-color: {hex_color};'></td></tr>"
+    
+    table += "</table>"
+    st.markdown(table, unsafe_allow_html=True)
 
 if st.button("Run/Show Results"):
     save_path = rf"results/{dataset_name}_result.png"
@@ -104,11 +115,4 @@ if st.button("Run/Show Results"):
         else:
             st.write("Result image not found. Try running the model first.")
 
-
-if dataset_name in dataset_colormaps:
-    st.subheader("Class Colour Mapping")
-    colormap_data = pd.DataFrame(
-        [(class_name, *rgb) for class_name, rgb in dataset_colormaps[dataset_name].items()],
-        columns=["Class Name", "R", "G", "B"]
-    )
-    st.dataframe(colormap_data, hide_index=True)
+display_colormap(dataset_name)
