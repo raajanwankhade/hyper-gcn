@@ -34,7 +34,7 @@ st.subheader("Team Members: Bhuvanesh Singla (221AI014), Raajan Rajesh Wankhade 
 dataset_name = st.selectbox("Select Dataset", ["MUUFL", "Houston18", "Trento" ])
 processing_type = st.selectbox("Select Processing Type", ["Show pre-computed result", "Run through model (20-30 Minutes)"])
 
-model_path = f"models\{dataset_name}_weights.pt" 
+model_path = f"models/{dataset_name}_weights.pt" 
 
 rgb_image_path = os.path.join(r"rgbs", f"{dataset_name}_rgb.png")
 if os.path.exists(rgb_image_path):
@@ -44,7 +44,7 @@ else:
 
 
 if st.button("Run/Show Results"):
-    save_path = rf"results\{dataset_name}_result.png"
+    save_path = rf"results/{dataset_name}_result.png"
     if processing_type == "Show pre-computed result":
         if os.path.exists(save_path):
             st.image(save_path, caption=f"Result for {dataset_name}")
